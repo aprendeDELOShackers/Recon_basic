@@ -1,12 +1,11 @@
-# ****_Pequeño script en bash para automatizar la enumeracion de subdominio_****
+#****_Pequeño script en bash para automatizar la enumeracion de subdominio_****
 
     #!/bin/bash
 
     #Autor= "Nu||d3v"==============="new_day_is"
 
-    #####################################################################################################################
+    
     #Automatization for Search subdomaind === "amass","assetfinder","findomain","subfinder","sublist3r","crobat","turbolist3r.py","ctfr.py","anubis","acamar.py","github-subdomains.oy","shuffledns","cencys-subdomain.py"
-    #####################################################################################################################
 
     dominio=$1
     resolvers=/home/josema96/HackerOne/hunters_tools/resolvers.txt
@@ -56,10 +55,10 @@
       anubis -t $dominio  -S | sort -u | anew $dominio/sub/anub.txt;
       echo -e "\n\ttermino la ejecution con 'anubis'\n";
       #echo -e "\n\tsearch subdomains con 'github-subdomains.py'\n";
-      #github-subdomains.py -t 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 -d $dominio | sort -u | anew $dominio/sub/git_su.txt;
+      #github-subdomains.py -t {token} -d $dominio | sort -u | anew $dominio/sub/git_su.txt;
       #echo -e "\n\ttermino la ejecution con 'github-subdomains.py'\n";
       #echo -e "\n\tsearch subdomains con 'cencys-subdomain.py'\n";
-      #censys-subdomain.py --censys-api-id 00a19a0d-3bef-4a04-a75f-ac97844c98f1 --censys-api-secret wYSZz8VA9EHvj8YvG6A4Q3rxDx5UEfrC  $dominio | sort -u | anew $dominio/sub/cen_sub.txt;
+      #censys-subdomain.py --censys-api-id d....-3bef-4...-a...-ac.... --censys-api-secret wYSZz8VA9....  $dominio | sort -u | anew $dominio/sub/cen_sub.txt;
       #echo -e "\n\ttermino la ejecution con 'cencys-subdomain.py'\n";
       echo -e "\n\tguardando todo los sub all 'allSub'\n"
       cat $dominio/sub/*.txt | sort -u | anew $dominio/sub/allSub ; #rm $dominio/sub/*.txt;
@@ -94,8 +93,8 @@
       Help
 
     fi
-##################################################################################################################
-# ****_Bforce.sh_****
+
+# ****_BforceSub.sh_****
 
     #!/bin/bash
 
@@ -112,7 +111,6 @@
     }
     valid_dns
 
-    #############################################################################################################
     puredns(){
       puredns bruteforce $wordlists $domain -r $domain/dnsResolve/resolvers.txt -w $domain/brute_force/posiSub.txt
       xargs -a posiSub.txt -I@ sh -c 'subfinder -d @ | anew $domain/brute_force/xargs.txt'
@@ -129,8 +127,9 @@
     }
     DNS_resolving
   
-  #############################################################################################################
+  
 #****_permu.sh_****
+    
     #!/bin/bash
 
     #Premutation/Alterations
@@ -146,7 +145,7 @@
     #otra manera de resolver o validar dns usando assetfinder y massdns
     assetfinder -subs-only testphp.vulnweb.com | tail -6 | massdns -r resolvers.txt -t A -o S -w resul.txt.
 
-#############################################################################################################
+
 #****_scrapi_sour_code.js.sh_****
 
     #!/bin/bash
@@ -177,7 +176,7 @@
 
      echo [+] ejecutando assetfinder [+] ; echo "testphp.vulnweb.com" | assetfinder -subs-only > sub.txt1 ; cat sub.txt1 ; httpx -silent -random-agent -retries 2 -no-color > http.txt2 ; gospider -S http.txt2 --js -t 50 -d 1 --sitemap --robots -w -r > gos.txt3 ; cat gos.txt3 | grep -Eo 'https?://[^ ]+' | sed 's/]$//' | unfurl -u domains | anew subvalido.txt4
     
-#############################################################################################################
+
 #****_google_analitics_sub_****
     
     #!/bin/bash
@@ -204,7 +203,7 @@
 
     #analyticsrelationships -u hackerone.com > tests ; cat tests | awk '{print $2}' | grep "hackerone.com"
 
-#############################################################################################################
+
 #****_url_probe.sh_****
     
     #!/bin/bash
@@ -233,11 +232,11 @@
     #       echo -e "\n\ttermino la ejecucion\n"
     #}
 
-#############################################################################################################
+
 #****_nuclei.sh_****
    
-   #!/bin/bash
-    #nuclei nos ayudará a descubrir fallas en un determinado url expuesto
+      #!/bin/bash
+      #nuclei nos ayudará a descubrir fallas en un determinado url expuesto
 
       cat url_valido.txt | nuclei -t /root/nuclei-templates/ -etags sqli.xss,rce -c 50 -o vuln-nuclei.txt
       cat url_valido.txt | nuclei -t /root/nuclei-templates/ -severity low,medium,high,critical -c 50 -o vuln-nuclei.txt
@@ -252,7 +251,7 @@
       #ejecutar nuclei de forma rapida
       nuclei -u https://example.com -tags cve -severity critical,high -author geeknik
 
-#############################################################################################################
+
 #****_url_history.sh_****
     
     #!/bin/bash
@@ -276,7 +275,7 @@
     #        cp gau.txt gau_filter.txt /home/josema96/HackerOne/program_bash/Recon_sub/mi_metodologia/hackerone.com/url_history
     #        rm gau.txt gau_filter.txt
 
-#############################################################################################################
+
 #****_gf.sh_****
 
    #!/bin/bash
@@ -293,7 +292,7 @@
       cp xss.txt sqli.txt ssrf.txt idor.txt lfi.txt json-sec.txt /home/josema96/HackerOne/program_bash/Recon_sub/mi_metodologia/hackerone.com/gf
       rm xss.txt sqli.txt ssrf.txt idor.txt lfi.txt json-sec.txt
 
-#############################################################################################################
+
 #****_genere_dict.sh_****
     
     #!/bin/bash
@@ -305,7 +304,7 @@
       cp pahts.txt keys.txt /home/josema96/HackerOne/program_bash/Recon_sub/mi_metodologia/hackerone.com/generet_dict
       rm pahts.txt keys.txt
       
-#############################################################################################################
+
 #****_file_js.sh_****
 
     #!/bin/bash
@@ -319,7 +318,7 @@
       rm fileJS.txt js200.txt
       #cat history_url.txt | subjs | fff | grep -v 404
 
-#############################################################################################################
+
 #****_ip.sh _****
 
     #!/bin/bash
