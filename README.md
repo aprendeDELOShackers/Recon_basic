@@ -1,4 +1,4 @@
-#****_Pequeño script en bash para automatizar la enumeracion de subdominio_****
+# ****_Pequeño script en bash para automatizar la enumeracion de subdominio_****
 
     #!/bin/bash
 
@@ -128,7 +128,7 @@
     DNS_resolving
   
   
-#****_permu.sh_****
+# ****_permu.sh_****
     
     #!/bin/bash
 
@@ -146,7 +146,7 @@
     assetfinder -subs-only testphp.vulnweb.com | tail -6 | massdns -r resolvers.txt -t A -o S -w resul.txt.
 
 
-#****_scrapi_sour_code.js.sh_****
+# ****_scrapi_sour_code.js.sh_****
 
     #!/bin/bash
 
@@ -177,7 +177,7 @@
      echo [+] ejecutando assetfinder [+] ; echo "testphp.vulnweb.com" | assetfinder -subs-only > sub.txt1 ; cat sub.txt1 ; httpx -silent -random-agent -retries 2 -no-color > http.txt2 ; gospider -S http.txt2 --js -t 50 -d 1 --sitemap --robots -w -r > gos.txt3 ; cat gos.txt3 | grep -Eo 'https?://[^ ]+' | sed 's/]$//' | unfurl -u domains | anew subvalido.txt4
     
 
-#****_google_analitics_sub_****
+# ****_google_analitics_sub_****
     
     #!/bin/bash
 
@@ -204,7 +204,7 @@
     #analyticsrelationships -u hackerone.com > tests ; cat tests | awk '{print $2}' | grep "hackerone.com"
 
 
-#****_url_probe.sh_****
+# ****_url_probe.sh_****
     
     #!/bin/bash
 
@@ -233,7 +233,7 @@
     #}
 
 
-#****_nuclei.sh_****
+# ****_nuclei.sh_****
    
       #!/bin/bash
       #nuclei nos ayudará a descubrir fallas en un determinado url expuesto
@@ -252,7 +252,7 @@
       nuclei -u https://example.com -tags cve -severity critical,high -author geeknik
 
 
-#****_url_history.sh_****
+# ****_url_history.sh_****
     
     #!/bin/bash
 
@@ -276,9 +276,9 @@
     #        rm gau.txt gau_filter.txt
 
 
-#****_gf.sh_****
+# ****_gf.sh_****
 
-   #!/bin/bash
+    #!/bin/bash
 
     #gf para buscar parametro en la url e inyectar payload
 
@@ -293,9 +293,9 @@
       rm xss.txt sqli.txt ssrf.txt idor.txt lfi.txt json-sec.txt
 
 
-#****_genere_dict.sh_****
+# ****_genere_dict.sh_****
     
-    #!/bin/bash
+       #!/bin/bash
 
                              #genere_dict (unfurl=paths/parameters) de way
             cat way_filter.txt | unfurl -unique paths > pahts.txt
@@ -305,7 +305,7 @@
       rm pahts.txt keys.txt
       
 
-#****_file_js.sh_****
+# ****_file_js.sh_****
 
     #!/bin/bash
 
@@ -319,7 +319,7 @@
       #cat history_url.txt | subjs | fff | grep -v 404
 
 
-#****_ip.sh _****
+# ****_ip.sh_****
 
     #!/bin/bash
 
