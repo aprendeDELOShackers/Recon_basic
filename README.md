@@ -122,86 +122,156 @@
     DNS_resolving(){
 
       puredns resolve $domain/brute_force/posiSub.txt -r $domain/dnsResolve/resolvers.txt | anew $domain/sub/sub_vali.txt
-      cp $domain/sub/sub_vali.txt /home/josema96/HackerOne/program_bash/Recon_sub/mi_metodologia/hackerone.com/sub
-      rm -fr $domain
+     
     }
     DNS_resolving
   
   
 # ****_permu.sh_****
     
-    #!/bin/bash
+        #!/bin/bash
 
-    #Premutation/Alterations
-      gotator -sub sub_real.txt -perm permutations.txtt -depth 1 -numbers 10 -mindup -adv -md | anew permuSub
-    #Validar o resolver o verificar si es valido
-            puredns resolve permSub -r resolvers.txtt | anew validoSub
-      cp permuSub /home/josema96/HackerOne/program_bash/Recon_sub/mi_metodologia/hackerone.com/sub
-      rm -rf permuSub hackerone.com.txt
-    
-    #de forma directa usando "assetfinder"
-     echo [+] ejecuando assetfinder ; assetfinder -subs-only testphp.vulnweb.com | tee sub.txt ; gotator -sub sub.txt -perm permutations.txtt -depth 1 -numbers 10 -mindup -adv -md > perm.txt ; puredns resolve perm.txt -r resolvers.txt | anew valido.tx
+        domain=$1
+        p=permutations.txtt
+        #Premutation/Alterations
 
-    #otra manera de resolver o validar dns usando assetfinder y massdns
-    assetfinder -subs-only testphp.vulnweb.com | tail -6 | massdns -r resolvers.txt -t A -o S -w resul.txt.
+        permu(){
+            mkdir -p $domain $domain/sub $domain/gotator_permu
+            echo [+] ejecutando assetfinder
+            subfinder -d $domain | tee $domain/sub/sub.txt
+            echo  [+] ejecutando gotator
+            gotator -sub $domain/sub/sub.txt -perm permutations.txtt -depth 1 -numbers 10 -mindup -adv -md > $domain/gotator_permu/perm.txt
+        #Validar o resolver o verificar si es valido
+                puredns resolve $domain/gotator_permu/perm.txt -r resolvers.txt | anew $domain/gotator_permu/valido.txt
+        }
+        permu
+
+        #echo [+] ejecuando assetfinder ; assetfinder -subs-only testphp.vulnweb.com | tee sub.txt ; gotator -sub sub.txt -perm permutations.txtt -depth 1 -numbers 10 -mindup -adv -md > perm.txt ; puredns resolve perm.txt -r resolvers.txt | anew valido.tx
+
+        #otra manera de resolver o validar dns
+        #assetfinder -subs-only testphp.vulnweb.com | tail -6 | massdns -r resolvers.txt -t A -o S -w resul.txt.
 
 
 # ****_scrapi_sour_code.js.sh_****
 
-    #!/bin/bash
+        #!/bin/bash
 
-    #Scraping(JS/source code) o raspado(JS/codigo fuente)
-    #corrindo gospider ====> Este proseso se divide en tres parte
-    #1)Subdomio de Sondeo Web
-    #2)Limpiesa de Salida
-    #3)Resolver nuestro dominio del destino
+        #Scraping(JS/source code) o raspado(JS/codigo fuente)
+        #corrindo gospider ====> Este proseso se divide en tres parte
+        #1)Subdomio de Sondeo Web
+        #2)Limpiesa de Salida
+        #3)Resolver nuestro dominio del destino
 
-    #1)Subdomio de Sondeo Web
-      cat sub_real.txt | httpx -random-agent -retries 2 -no-color | anew urlpro.txt
+        domain=$1
+        resolvers=/home/josema96/HackerOne/hunters_tools/resolvers.txt
 
-    #-S, --sites | -t, --threads | #-w, --include-subs | -d, --depth | -r, --include-other-source
-      gospider -S urlpro.txt --js -t 50 -d 3 --sitemap --robots -w -r | anew  gos_js.txt
-    #2)Limpiesa de Salida
-      cat gos_js.txt | sed '/^.\{2048\}./d' > gosprob.txt;
-      gosprob.txt | grep -Eo 'https?://[^ ]+' | sed 's/]$//' | unfurl -u domains | grep 'hackerone.com' | sort - u | anew gospiderSub.txt
-      cp gospiderSub.txt /home/josema96/HackerOne/program_bash/Recon_sub/mi_metodologia/hackerone.com/sub
-      rm -fr urlpro.txt gos_js.txt gosprob.txt gospiderSub.txt 
-    #3)Resolver nuestro dominio del destino
-      puredns resolve sub.txt -w S_real.txt -r $resolvers
-      cp S_real.txt /home/josema96/HackerOne/program_bash/Recon_sub/mi_metodologia/hackerone.com/sub
-      rm -rf sub_real.txt urlpro.txt gos_js.txt gosprob.txt sub.txt S_real.txt
+        sub(){
+            mkdir -p $domain $domain/sub $domain/httpx $domain/gos_sub;
+            assetfinder --sub-only $domain | anew $domain/sub/asset.txt;
+        }
+        sub
+        #1)Subdomio de Sondeo Web
+        httpx(){
+            cat $donain/sub/asset.txt | httpx -silent | anew $domain/httpx/urlpro.txt;
+        }
+        httpx
 
-      #Scraping(JS/source code) o raspado(JS/codigo fuente) aplicar de forma directa 
-     echo [+] ejecutando assetfinder [+] ; echo "testphp.vulnweb.com" | assetfinder -subs-only |  tee sub.txt1 ; cat sub.txt1 ; httpx -silent -random-agent -retries 2 -no-color | tee http.txt2 ; gospider -S http.txt2 --js -t 50 -d 1 --sitemap --robots -w -r | tail -1000 | anew gos.txt3 ; cat gos.txt3 | grep -Eo 'https?://[^ ]+' | sed 's/]$//' | unfurl -u domains | anew subvalido.txt4
+        gospider(){
+        #-S, --sites | -t, --threads | #-w, --include-subs | -d, --depth | -r, --include-other-source
+            gospider -S $domain/httpx/urlpro.txt --js -t 50 -d 3 --sitemap --robots -w -r | anew  $domain/gos_sub/gos.txt;
+        #2)Limpiesa de Salida
+            cat $domain/gos_sub/gos.txt | sed '/^.\{2048\}./d' > $domain/gos_sub/gospro.txt;
+            cat $domain/gos_sub/gospro.txt | grep -Eo 'https?://[^ ]+' | sed 's/]$//' | unfurl -u domains | grep "*.$domain.com" | sort - u | anew $domain/gos_sub/sub.txt
+        }
+        gospider
 
-     echo [+] ejecutando assetfinder [+] ; echo "testphp.vulnweb.com" | assetfinder -subs-only > sub.txt1 ; cat sub.txt1 ; httpx -silent -random-agent -retries 2 -no-color > http.txt2 ; gospider -S http.txt2 --js -t 50 -d 1 --sitemap --robots -w -r > gos.txt3 ; cat gos.txt3 | grep -Eo 'https?://[^ ]+' | sed 's/]$//' | unfurl -u domains | anew subvalido.txt4
-    
+        #3)Resolver nuestro dominio del destino
+        puredns(){
+            puredns resolve $domain/gos_sub/sub.txt -w $domain/gos_sub/sub_real.txt -r $resolvers
+            cat $domain/gos_sub/sub_real.txt
+        }
+        puredns
+
+        #Scraping(JS/source code) o raspado(JS/codigo fuente) aplicar de forma directa 
+        #echo [+] ejecutando assetfinder [+] ; echo "testphp.vulnweb.com" | assetfinder -subs-only |  tee sub.txt1 ; cat sub.txt1 ; httpx -silent -random-agent -retries 2 -no-color | tee http.txt2 ; gospider -S http.txt2 --js -t 50 -d 1 --sitemap --robots -w -r | tail -1000 | anew gos.txt3 ; cat gos.txt3 | grep -Eo 'https?://[^ ]+' | sed 's/]$//' | unfurl -u domains | anew subvalido.txt4
+
+        #echo [+] ejecutando assetfinder [+] ; echo "testphp.vulnweb.com" | assetfinder -subs-only > sub.txt1 ; cat sub.txt1 ; httpx -silent -random-agent -retries 2 -no-color > http.txt2 ; gospider -S http.txt2 --js -t 50 -d 1 --sitemap --robots -w -r > gos.txt3 ; cat gos.txt3 | grep -Eo 'https?://[^ ]+' | sed 's/]$//' | unfurl -u domains | anew subvalido.txt4
 
 # ****_google_analitics_sub_****
     
-    #!/bin/bash
+        #!/bin/bash
 
-    #GOOGLE ANALITIC con "BuiltWidth" es una extension
-    #Utilizamos una tools en lineas de comando llamado "AnaliticsRelationships"
-    domain=$1
+        #GOOGLE ANALITIC con "BuiltWidth" es una extension
+        #Utilizamos una tools en lineas de comando llamado "AnaliticsRelationships"
+        domain=$1
 
-    AnaliticsRelationships(){
-      mkdir -p $domain $domain/sub
-      analyticsrelationships --url $domain | anew $domain/sub/subdomain.txt
-      cat $domain/sub/subdomain.txt  | awk '{print $2}' | grep '.hackerone.com' | anew  $domain/sub/analitics
-      cp $domain/sub/analitics /home/josema96/HackerOne/program_bash/Recon_sub/mi_metodologia/hackerone.com/sub
-      rm -rf $domain
-    }
-    AnaliticsRelationships
+        AnaliticsRelationships(){
+            mkdir -p $domain $domain/sub
+            analyticsrelationships --url $domain | anew $domain/sub/subdomain.txt
+            cat $domain/sub/subdomain.txt  | awk '{print $2}' | grep '.hackerone.com' | anew  $domain/sub/analiticsSub.txt
+        }
+        AnaliticsRelationships
 
-    #validar dns
-    puredns(){
-   	puredns resolve $domain/sub/subdomain.txt -w $domain/sub/sub_real.txt -r $resolvers
-   	cat $domain/sub/sub_real.txt
-    }
-    puredns
+        validar dns
+        puredns(){
+            puredns resolve $domain/sub/analiticsSub.txt -w $domain/sub/sub_real.txt -r $resolvers
+            cat $domain/sub/sub_real.txt
+        }
+        puredns
 
-    #analyticsrelationships -u hackerone.com > tests ; cat tests | awk '{print $2}' | grep "hackerone.com"
+
+        #analyticsrelationships -u hackerone.com > tests ; cat tests | awk '{print $2}' | grep "hackerone.com"
+
+# ****_sondeo TLS, CSP, CNAME_****
+
+        #!/bin/bash
+
+        #sondeo TLS, CSP, CNAME
+        #Para ellos utilizamos la tools llamada CERO
+
+
+            #Sondeo TLS =====> Transporte leye segurity
+        domain=$1
+        cero(){
+            mkdir -p $domain $domain/subdo
+            cero $domain | sed 's/^*.//g' | grep -e "\." | anew $domain/subdo/sub.txt
+        #validar dns
+            puredns resolve $domain/subdo/sub.txt -w $domain/subdo/sub_real.txt -r $resolvers
+
+
+        }
+        cero
+            #Sondeo CSP ====> Politica seguridad de contenido
+
+        cat su.txt | httpx -csp-probe -status-code -retries 2 -no-color -silent | anew csp.txt | cut -d ' ' -f1 | unfurl -u domains | anew sub.tst
+
+
+
+        #Sondeo CNAME ====> Personalmente no hay nada que buscar pero igual dejo los comando
+
+        dnsx -retry 3 -cname -l subdomains.txt
+
+# ****_VHOST probing_****
+
+        #!/bin/bash
+
+            #VHOST probing
+
+        #hay 2 clase tipos VHOST virtual
+        # 1=Host vitual basado en IP y 2=Host virtual basado en nombre
+
+        #Como podemos identificar VHOST en una sola IP..?
+        #Para ellos utilizamos la tools llamada "HosthHunter"
+        domain=$1
+        Hosthunter(){
+            mkdir -p $domain $domain/subdominio
+            python3 hosthunter ip.txt
+
+        }
+        Hosthunter
+
+        #Bruteforce VHOST
+         gobuster -vhost -u https://ejemplo.com -t 50 -w subdomain.txt
 
 
 # ****_url_probe.sh_****
